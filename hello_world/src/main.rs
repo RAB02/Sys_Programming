@@ -1,38 +1,3 @@
-// use std::fs::OpenOptions;
-// use std::io::Write;
-
-// fn append_to_file() {
-//     let mut file = OpenOptions::new()
-//         .append(true) 
-//         .open("example.txt")
-//         .unwrap();
-
-//     writeln!(file, "This line is appended to the file.").unwrap();
-// }
-
-// use std::process::Command;
-
-// fn executing_os_commands_linux() {
-//     let output = Command::new("sudo")
-//         .arg("cat")
-//         .arg("example.txt")
-//         .output()
-//         .expect("Failed to execute command");
-
-//     println!("Command output: {}", String::from_utf8_lossy(&output.stdout));
-// }
-// fn executing_os_commands_linux() {
-//     let output = Command::new("python3")
-//         .arg("my_script.py")
-//         .output()
-//         .expect("Failed to execute command");
-
-//     println!("Command output: {}", String::from_utf8_lossy(&output.stdout));
-// }
-
-// fn main() {
-//     executing_os_commands_linux();
-// }
 
 use std::fs::File;
 use std::io::{Write, BufReader, BufRead};
@@ -56,13 +21,20 @@ fn save_books(books: &Vec<Book>, filename: &str) {
 fn load_books(filename: &str) -> Vec<Book> {
     // TODO: Implement this function
     // Hint: Use File::open() and BufReader
-    let file = File::open(filename).unwrap();
+    let file = File::open(filename).expect("Failed to open file");
     let buf_reader = BufReader::new(file);
-    let data: Vec<Book> = vec![];
+    let mut data: Vec<Book> = vec![];
 
-    file.read_to_string(&mut data).unwrap();
-
-
+    for line in buf_reader.lines() {
+        let line = line.unwrap();
+        let mut parts = line.split(','); 
+        let title = parts.next().unwrap().to_string();
+        let author = parts.next().unwrap().to_string();     
+        let year_str = parts.next().expect("Missing year").trim();
+        let year = year_str.parse::<u16>().expect("Failed to parse year");
+        
+        data.push(Book { title, author, year });
+    }
     return data;
 }
 
@@ -81,3 +53,58 @@ fn main() {
         println!("{} by {}, published in {}", book.title, book.author, book.year);
     }
 }
+
+// #[derive(Debug)]
+// enum GradeLevel {
+//     Bachelor,
+//     Master,
+//     PhD,
+// }
+// #[derive(Debug)]
+// enum Major {
+//     ComputerScience,
+//     ElectricalEngineering,
+// }
+// #[derive(Debug)]
+// struct Student {
+//     name:String,
+//     grade:GradeLevel,
+//     major:Major
+// }
+
+// impl Student {
+//     fn new(name:String,grade:GradeLevel,major:Major) -> Self {
+//         Student {
+//             name:name,
+//             grade:grade,
+//             major:major,
+//         }
+//     }
+
+//     fn introduce_yourself(&self) {
+//         println!("My name is {}.", self.name);
+
+//         let classMsg = match self.grade{
+//             GradeLevel::Bachelor => "I am a Bachelors Student",
+//             GradeLevel::Master => "I am a Masters Student",
+//             GradeLevel::PhD => "I am a PHD Student"
+//         };
+
+//         let majorMsg = match self.major{
+//             Major::ComputerScience => "That studies in Computer Science",
+//             Major::ElectricalEngineering => "That studies in Electrical Engineering",
+//         };
+
+//         println!("{}", classMsg);
+//         println!("{}", majorMsg);
+
+//     }
+// }
+        
+
+// fn main() {
+//     let s1 = Student::new("John".to_string(),
+//     GradeLevel::Bachelor,
+//     Major::ComputerScience);
+//     s1.introduce_yourself();
+// }
