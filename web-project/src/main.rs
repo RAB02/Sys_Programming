@@ -40,17 +40,17 @@ fn main() {
         "https://www.shopify.com".to_string(),
     ];
 
-    // Configurable parameters
+
     let worker_threads = 2;
     let timeout = Duration::from_secs(5);
 
-    // Shared results storage
+
     let results = Arc::new(Mutex::new(Vec::new()));
     let urls = Arc::new(urls);
 
     let file_name = "website_statuses.txt".to_string();
 
-    // Distribute workload among threads
+
     let mut handles = vec![];
 
     for thread_id in 0..worker_threads {
@@ -83,12 +83,12 @@ fn main() {
         handles.push(handle);
     }
 
-    // Wait for all threads to finish
+
     for handle in handles {
         handle.join().unwrap();
     }
 
-    // Save the results to a file
+
     let results = results.lock().unwrap();
     let website = Website {
         web_url: String::new(),
